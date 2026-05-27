@@ -18,7 +18,7 @@
         <a href="contact.html">Contact</a>
     </nav>
 
-    <main class="container" id="login-screen">
+    <main class="container" id="login-screen" style="padding-top: 0.3rem;">
         <div class="section-title">
             <h1>管理人室</h1>
         </div>
@@ -29,7 +29,7 @@
         </div>
     </main>
 
-    <main class="container" id="admin-room" style="display: none; width: 92vw; max-width: 92vw; padding-left: 2rem; padding-right: 2rem;">
+    <main class="container" id="admin-room" style="display: none; width: 92vw; max-width: 92vw; padding-top: 0.3rem; padding-left: 2rem; padding-right: 2rem;">
         <div class="section-title">
             <h1>管理人室</h1>
             <p class="subtitle">投稿管理</p>
@@ -71,20 +71,21 @@
             entries.forEach(entry => {
                 const item = document.createElement('div');
                 item.className = 'frame';
-                item.style.cssText = 'position: relative; padding: 1.5rem; margin-bottom: 1.5rem;';
+                item.style.cssText = 'position: relative; padding: 0.75rem 1rem; margin-bottom: 0.75rem;';
 
                 const date = document.createElement('span');
                 date.className = 'date';
+                date.style.fontSize = '0.7rem';
                 date.textContent = entry.date;
 
                 const text = document.createElement('p');
-                text.style.fontSize = '0.9rem';
+                text.style.fontSize = '0.8rem';
                 text.style.whiteSpace = 'pre-wrap';
                 text.textContent = entry.text;
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = '×';
-                deleteBtn.style.cssText = 'position: absolute; top: 0.75rem; right: 0.75rem; width: 1.6rem; height: 1.6rem; padding: 0; font-size: 0.85rem; font-weight: normal; line-height: 1;';
+                deleteBtn.style.cssText = 'position: absolute; top: 0.5rem; right: 0.5rem; width: 1.2rem; height: 1.2rem; padding: 0; font-size: 0.65rem; font-weight: normal; line-height: 1;';
                 deleteBtn.addEventListener('click', async () => {
                     await db.from('entries').delete().eq('id', entry.id);
                     item.remove();
