@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary - 空白の時間.com</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="diary.html" class="active">Diary</a>
+        <a href="profile.html">Profile</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    <main class="container" style="width: 92vw; max-width: 92vw; padding-left: 2rem; padding-right: 2rem;">
+        <div class="section-title">
+            <h1>Diary</h1>
+            <p class="subtitle">日々の記録</p>
+        </div>
+        <div id="diary-container"></div>
+    </main>
+    <a href="diary.html" class="door-link">
+        <div class="door-frame">
+            <div class="door-panel">
+                <div class="door-knob"></div>
+            </div>
+        </div>
+    </a>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+/* --- Global Styles --- */
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --spacing: 2rem;
+    --border-width: 5px;
+    /* 3pxの太い線 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--white);
+    color: var(--black);
+    font-family: "Inter", "Noto Sans JP", sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+    flex: 1;
+}
+
+/* 太い枠線レイアウトの基本 */
+.frame,
+.hero-frame,
+.diary-item,
+input,
+textarea,
+button {
+    border: var(--border-width) solid var(--black);
+    outline: none;
+}
+
+.frame {
+    padding: var(--spacing);
+    margin-bottom: var(--spacing);
+}
+
+/* Homeの大きな枠 */
+.hero-frame {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 6rem;
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+}
+
+/* ドア（Home → About） */
+.door-link {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: block;
+    text-decoration: none;
+}
+
+.door-frame {
+    width: 44px;
+    height: 70px;
+    border: var(--border-width) solid var(--black);
+    background: #d8d8d8;
+    position: relative;
+    perspective: 220px;
+}
+
+.door-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--white);
+    transform-origin: right center;
+    transition: transform 0.5s ease;
+}
+
+.door-link:hover .door-panel {
+    transform: rotateY(70deg);
+}
+
+.door-knob {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--black);
+    border-radius: 50%;
+}
+
+.hero-frame h1 {
+    font-size: 2.05rem;
+    letter-spacing: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.hero-frame .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+}
+
+#clock {
+    font-size: 1.25rem;
+    letter-spacing: 0.4rem;
+    font-weight: 300;
+    opacity: 0.8;
+}
+
+/* Navigation */
+nav {
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--black);
+    font-size: 1.15rem;
+    padding: 0.5rem 1rem;
+    border: var(--border-width) solid transparent;
+    transition: opacity 0.3s;
+}
+
+nav a:hover {
+    opacity: 0.5;
+}
+
+/* 現在ページのナビ */
+nav a.active:hover {
+    opacity: 1;
+}
+
+/* Typography */
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title h1 {
+    font-size: 2rem;
+    letter-spacing: 0.2rem;
+}
+
+.lang-group {
+    margin-bottom: 2.5rem;
+}
+
+.jp {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.en {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.6;
+}
+
+/* Diary Form */
+.diary-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.diary-form textarea {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    background: transparent;
+}
+
+.diary-item {
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* ランダム配置カード */
+.sticky-note {
+    position: absolute;
+    width: 210px;
+    padding: 1.2rem;
+    margin: 0;
+    word-break: break-word;
+    white-space: pre-wrap;
+    z-index: 1;
+    user-select: none;
+    background: var(--white);
+}
+
+.date {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Button */
+button {
+    background: var(--black);
+    color: var(--white);
+    padding: 1rem 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: var(--white);
+    color: var(--black);
+}
+
+/* Contact 送信後メッセージ */
+.thanks-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.thanks-message .jp {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.thanks-message .en {
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .hero-frame h1 {
+        font-size: 1.7rem;
+        letter-spacing: 0.2rem;
+        white-space: nowrap;
+    }
+
+    nav {
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important;
+        gap: 0 !important;
+        padding: 0.5rem !important;
+    }
+
+    nav a {
+        font-size: 0.8rem !important;
+        padding: 0.3rem 0.1rem !important;
+        border: none !important;
+        text-align: center !important;
+    }
+
+    .container {
+        width: 92vw !important;
+        max-width: 92vw !important;
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .hero-frame {
+        padding: 2rem;
+        margin-top: 5rem;
+    }
+
+    .frame {
+        padding: 1.2rem;
+    }
+}
