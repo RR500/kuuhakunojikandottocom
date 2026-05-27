@@ -244,6 +244,52 @@ button:hover {
     opacity: 0.6;
 }
 
+/* 管理人室の窓 */
+.mouse-hole {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 2rem;
+    width: 62px;
+    height: 42px;
+    border: 3px solid var(--black);
+    background:
+        /* 反射線（左） */
+        linear-gradient(45deg, transparent 28%, rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.18) 30%, transparent 30%, transparent 38%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0.18) 40%, transparent 40%) 0 0 / 50% 100% no-repeat,
+        /* 反射線（右） */
+        linear-gradient(45deg, transparent 28%, rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.18) 30%, transparent 30%, transparent 38%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0.18) 40%, transparent 40%) 50% 0 / 50% 100% no-repeat,
+        #f0f0f0;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* 中央の縦桟 */
+.mouse-hole::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--black);
+    transform: translateX(-50%);
+}
+
+/* 中央のロック */
+.mouse-hole::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 7px;
+    height: 9px;
+    background: var(--black);
+    transform: translate(-50%, -50%);
+}
+
+.mouse-hole:hover {
+    transform: scale(1.1);
+}
+
 @media (max-width: 768px) {
     .hero-frame h1 {
         font-size: 1.7rem;
