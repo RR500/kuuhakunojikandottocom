@@ -90,7 +90,7 @@ button {
 }
 
 .door-link:hover .door-panel {
-    transform: rotateY(70deg);
+    transform: rotateY(-70deg);
 }
 
 .door-knob {
