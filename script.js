@@ -57,41 +57,54 @@ document.addEventListener('DOMContentLoaded', () => {
         diaryContainer.innerHTML = '';
         if (!entries || entries.length === 0) return;
 
+        function parseEntryTime(dateStr) {
+            const raw = dateStr.includes('—') ? dateStr.split('—')[1].trim() : dateStr.trim();
+            const [datePart, timePart] = raw.split('  ');
+            if (!datePart || !timePart) return 0;
+            const [y, m, d] = datePart.split('.');
+            const [h, min] = timePart.split(':');
+            return new Date(y, m - 1, d, h, min).getTime();
+        }
+
+        entries.sort((a, b) => {
+            const aOld = Date.now() - parseEntryTime(a.date) > 24 * 60 * 60 * 1000;
+            const bOld = Date.now() - parseEntryTime(b.date) > 24 * 60 * 60 * 1000;
+            if (aOld && !bOld) return 1;
+            if (!aOld && bOld) return -1;
+            return 0;
+        });
+
         const containerWidth = diaryContainer.offsetWidth || window.innerWidth * 0.9;
         const noteWidth = 210;
         const colCount = Math.max(1, Math.floor(containerWidth / (noteWidth + 30)));
+        const colWidth = containerWidth / colCount;
+        const columnHeights = new Array(colCount).fill(20);
         let maxBottom = 0;
 
         diaryContainer.style.position = 'relative';
 
-        const savedPositions = JSON.parse(localStorage.getItem('card-positions') || '{}');
         let topZ = 1;
+        const myIds = JSON.parse(localStorage.getItem('my-post-ids') || '[]');
 
-        entries.forEach((entry, index) => {
+        // パス1: カードを生成してDOMに追加（非表示）
+        const cards = entries.map(entry => {
             const item = document.createElement('div');
             item.className = 'diary-item sticky-note';
-
-            const saved = savedPositions[entry.id];
-            let x, y;
-            if (saved) {
-                x = saved.x;
-                y = saved.y;
-            } else {
-                const col = index % colCount;
-                const row = Math.floor(index / colCount);
-                const colWidth = containerWidth / colCount;
-                x = col * colWidth + Math.random() * (colWidth - noteWidth - 10);
-                y = row * 200 + Math.random() * 60 + 10;
-                savedPositions[entry.id] = { x, y };
-                localStorage.setItem('card-positions', JSON.stringify(savedPositions));
-            }
-
-            item.style.left = `${Math.max(0, x)}px`;
-            item.style.top = `${y}px`;
+            item.style.visibility = 'hidden';
             item.style.cursor = 'grab';
             item.style.background = 'var(--white)';
 
-            if (y + 220 > maxBottom) maxBottom = y + 220;
+            const rawDate = entry.date.includes('—') ? entry.date.split('—')[1].trim() : entry.date.trim();
+            const [datePart, timePart] = rawDate.split('  ');
+            if (datePart && timePart) {
+                const [y2, m, d] = datePart.split('.');
+                const [h, min] = timePart.split(':');
+                const entryTime = new Date(y2, m - 1, d, h, min);
+                if (Date.now() - entryTime > 24 * 60 * 60 * 1000) {
+                    item.style.background = '#d8d8d8';
+                    item.style.color = '#888';
+                }
+            }
 
             const date = document.createElement('span');
             date.className = 'date';
@@ -101,7 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
             text.style.fontSize = '0.85rem';
             text.textContent = entry.text;
 
-            const myIds = JSON.parse(localStorage.getItem('my-post-ids') || '[]');
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = '×';
             deleteBtn.style.cssText = `position: absolute; top: 0.5rem; right: 0.5rem; width: 1.4rem; height: 1.4rem; padding: 0; font-size: 0.75rem; font-weight: normal; line-height: 1; display: ${myIds.includes(entry.id) ? 'block' : 'none'};`;
@@ -113,30 +125,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderDiaries();
             });
 
-            // ドラッグ（マウス＆タッチ対応）
             function startDrag(clientX, clientY) {
                 item.style.cursor = 'grabbing';
                 item.style.zIndex = ++topZ;
-
                 const startX = clientX - item.offsetLeft;
                 const startY = clientY - item.offsetTop;
-
-                function onMouseMove(e) {
-                    move(e.clientX, e.clientY);
-                }
-                function onTouchMove(e) {
-                    e.preventDefault();
-                    move(e.touches[0].clientX, e.touches[0].clientY);
-                }
+                function onMouseMove(e) { move(e.clientX, e.clientY); }
+                function onTouchMove(e) { e.preventDefault(); move(e.touches[0].clientX, e.touches[0].clientY); }
                 function move(cx, cy) {
-                    const newLeft = cx - startX;
-                    const newTop  = cy - startY;
-                    item.style.left = `${newLeft}px`;
-                    item.style.top  = `${newTop}px`;
-                    const bottom = newTop + item.offsetHeight + 40;
-                    if (bottom > parseInt(diaryContainer.style.height)) {
-                        diaryContainer.style.height = `${bottom}px`;
-                    }
+                    item.style.left = `${cx - startX}px`;
+                    item.style.top  = `${cy - startY}px`;
+                    const bottom = (cy - startY) + item.offsetHeight + 40;
+                    if (bottom > parseInt(diaryContainer.style.height)) diaryContainer.style.height = `${bottom}px`;
                 }
                 function onEnd() {
                     item.style.cursor = 'grab';
@@ -144,36 +144,38 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.removeEventListener('mouseup', onEnd);
                     document.removeEventListener('touchmove', onTouchMove);
                     document.removeEventListener('touchend', onEnd);
-
-                    const positions = JSON.parse(localStorage.getItem('card-positions') || '{}');
-                    positions[entry.id] = { x: parseFloat(item.style.left), y: parseFloat(item.style.top) };
-                    localStorage.setItem('card-positions', JSON.stringify(positions));
                 }
-
                 document.addEventListener('mousemove', onMouseMove);
                 document.addEventListener('mouseup', onEnd);
                 document.addEventListener('touchmove', onTouchMove, { passive: false });
                 document.addEventListener('touchend', onEnd);
             }
 
-            item.addEventListener('mousedown', (e) => {
-                if (e.target === deleteBtn) return;
-                e.preventDefault();
-                startDrag(e.clientX, e.clientY);
-            });
-
-            item.addEventListener('touchstart', (e) => {
-                if (e.target === deleteBtn) return;
-                startDrag(e.touches[0].clientX, e.touches[0].clientY);
-            }, { passive: true });
+            item.addEventListener('mousedown', (e) => { if (e.target !== deleteBtn) { e.preventDefault(); startDrag(e.clientX, e.clientY); } });
+            item.addEventListener('touchstart', (e) => { if (e.target !== deleteBtn) startDrag(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
 
             item.appendChild(date);
             item.appendChild(text);
             item.appendChild(deleteBtn);
             diaryContainer.appendChild(item);
+            return item;
         });
 
-        diaryContainer.style.height = `${maxBottom + 80}px`;
+        // パス2: 実際の高さを測ってマスonry配置
+        cards.forEach(item => {
+            const col = columnHeights.indexOf(Math.min(...columnHeights));
+            const x = col * colWidth + (colWidth - noteWidth) / 2 + (Math.random() - 0.5) * 40;
+            const y = columnHeights[col] + Math.random() * 15;
+            const gap = 15 + Math.random() * 20;
+            columnHeights[col] += item.offsetHeight + gap;
+            const rotate = (Math.random() - 0.5) * 4;
+            item.style.left = `${Math.max(0, x)}px`;
+            item.style.top = `${y}px`;
+            item.style.transform = `rotate(${rotate}deg)`;
+            item.style.visibility = 'visible';
+        });
+
+        diaryContainer.style.height = `${Math.max(...columnHeights) + 40}px`;
     }
 
     // diary-log.html での表示
