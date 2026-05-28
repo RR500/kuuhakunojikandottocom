@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         diaryContainer.style.position = 'relative';
 
         const savedPositions = JSON.parse(localStorage.getItem('card-positions') || '{}');
+        let topZ = 1;
 
         entries.forEach((entry, index) => {
             const item = document.createElement('div');
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // ドラッグ（マウス＆タッチ対応）
             function startDrag(clientX, clientY) {
                 item.style.cursor = 'grabbing';
-                item.style.zIndex = 100;
+                item.style.zIndex = ++topZ;
 
                 const startX = clientX - item.offsetLeft;
                 const startY = clientY - item.offsetTop;
@@ -139,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 function onEnd() {
                     item.style.cursor = 'grab';
-                    item.style.zIndex = 1;
                     document.removeEventListener('mousemove', onMouseMove);
                     document.removeEventListener('mouseup', onEnd);
                     document.removeEventListener('touchmove', onTouchMove);
