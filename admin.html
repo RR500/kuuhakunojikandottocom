@@ -44,14 +44,18 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lbWJnZHVxa3ZxaGZncnVxYnZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NzY3MTYsImV4cCI6MjA5NTQ1MjcxNn0.CVJW9N5X4ecY3JS4ywBCy6XGJRUbOOISf7vyX1euQaw';
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        document.getElementById('admin-login').addEventListener('click', () => {
+        document.getElementById('admin-login').addEventListener('click', async () => {
             const pw = document.getElementById('admin-password').value;
-            if (pw === '4431') {
+            const { error } = await db.auth.signInWithPassword({
+                email: 'riku01272017@gmail.com',
+                password: pw
+            });
+            if (error) {
+                document.getElementById('admin-error').style.display = 'block';
+            } else {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('admin-room').style.display = 'block';
                 renderAdminEntries();
-            } else {
-                document.getElementById('admin-error').style.display = 'block';
             }
         });
 
