@@ -75,10 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const containerWidth = diaryContainer.offsetWidth || window.innerWidth * 0.9;
-        const noteWidth = 210;
-        const colCount = Math.max(1, Math.floor(containerWidth / (noteWidth + 30)));
+        const isMobile = containerWidth < 600;
+        const colCount = isMobile ? 2 : Math.max(1, Math.floor(containerWidth / 240));
+        const noteWidth = isMobile ? Math.floor((containerWidth - 50) / 2) : 210;
         const colWidth = containerWidth / colCount;
         const columnHeights = new Array(colCount).fill(20);
+        const xJitter = isMobile ? 10 : 40;
         let maxBottom = 0;
 
         diaryContainer.style.position = 'relative';
@@ -91,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 'diary-item sticky-note';
             item.style.visibility = 'hidden';
+            item.style.width = `${noteWidth}px`;
             item.style.cursor = 'grab';
             item.style.background = 'var(--white)';
 
@@ -164,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // パス2: 実際の高さを測ってマスonry配置
         cards.forEach(item => {
             const col = columnHeights.indexOf(Math.min(...columnHeights));
-            const x = col * colWidth + (colWidth - noteWidth) / 2 + (Math.random() - 0.5) * 40;
+            const x = col * colWidth + (colWidth - noteWidth) / 2 + (Math.random() - 0.5) * xJitter;
             const y = columnHeights[col] + Math.random() * 15;
             const gap = 15 + Math.random() * 20;
             columnHeights[col] += item.offsetHeight + gap;
