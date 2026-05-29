@@ -244,50 +244,40 @@ button:hover {
     opacity: 0.6;
 }
 
-/* 管理人室の窓 */
-.mouse-hole {
+/* 管理人室ドアノブ */
+.door-handle-link {
     position: fixed;
     bottom: 1.5rem;
-    left: 2rem;
+    left: 1.5rem;
     width: 36px;
-    height: 24px;
-    border: 3px solid var(--black);
-    background:
-        /* 反射線（左） */
-        linear-gradient(45deg, transparent 28%, rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.18) 30%, transparent 30%, transparent 38%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0.18) 40%, transparent 40%) 0 0 / 50% 100% no-repeat,
-        /* 反射線（右） */
-        linear-gradient(45deg, transparent 28%, rgba(0,0,0,0.18) 28%, rgba(0,0,0,0.18) 30%, transparent 30%, transparent 38%, rgba(0,0,0,0.18) 38%, rgba(0,0,0,0.18) 40%, transparent 40%) 50% 0 / 50% 100% no-repeat,
-        #f0f0f0;
+    height: 36px;
     display: block;
-    transition: transform 0.3s ease;
+    text-decoration: none;
 }
 
-/* 中央の縦桟 */
-.mouse-hole::before {
-    content: '';
+.door-handle-lever {
     position: absolute;
-    left: 50%;
-    top: 0;
-    width: 3px;
-    height: 100%;
+    left: 8px;
+    top: calc(50% - 1.5px);
+    width: 20px;
+    height: 3px;
     background: var(--black);
-    transform: translateX(-50%);
+    transform-origin: left center;
+    transition: transform 0.4s ease;
 }
 
-/* 中央のロック */
-.mouse-hole::after {
-    content: '';
+.door-handle-knob {
     position: absolute;
-    left: 50%;
-    top: 50%;
+    left: 5.5px;
+    top: calc(50% - 2.5px);
     width: 5px;
-    height: 7px;
+    height: 5px;
     background: var(--black);
-    transform: translate(-50%, -50%);
+    border-radius: 50%;
 }
 
-.mouse-hole:hover {
-    transform: scale(1.1);
+.door-handle-link:hover .door-handle-lever {
+    transform: rotate(30deg);
 }
 
 @media (max-width: 768px) {
@@ -330,10 +320,4 @@ button:hover {
         margin-bottom: 1.5rem;
     }
 
-    .mouse-hole {
-        width: 34px;
-        height: 22px;
-        bottom: 1rem;
-        left: 1rem;
-    }
 }
